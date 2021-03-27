@@ -122,7 +122,7 @@ cdef class Graph(object):
             self._register_context(py_ctx)
         self._nb_filters_seen = self.ptr.nb_filters
 
-    def add_buffer(self, template=None, width=None, height=None, format=None, name=None):
+    def add_buffer(self, template=None, width=None, height=None, format=None, time_base=None, name=None):
 
         if template is not None:
             if width is None:
@@ -131,6 +131,8 @@ cdef class Graph(object):
                 height = template.height
             if format is None:
                 format = template.format
+            if time_base is None:
+                time_base = template.time_base
 
         if width is None:
             raise ValueError('missing width')
@@ -144,7 +146,7 @@ cdef class Graph(object):
             name=name,
             video_size=f'{width}x{height}',
             pix_fmt=str(int(VideoFormat(format))),
-            time_base='1/1000',
+            time_base=str(time_base),
             pixel_aspect='1/1',
         )
 
