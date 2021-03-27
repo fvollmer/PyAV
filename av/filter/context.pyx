@@ -8,6 +8,8 @@ from av.filter.pad cimport alloc_filter_pads
 from av.frame cimport Frame
 from av.video.frame cimport VideoFrame, alloc_video_frame
 
+from fractions import Fraction
+
 
 cdef object _cinit_sentinel = object()
 
@@ -106,4 +108,6 @@ cdef class FilterContext(object):
 
         err_check(lib.av_buffersink_get_frame(self.ptr, frame.ptr))
         frame._init_user_attributes()
+        time_base = self.ptr.inputs[0].time_base
+        frame.time_base = Fraction(time_base.num, time_base.den)
         return frame
