@@ -1,4 +1,5 @@
 from fractions import Fraction
+import warnings
 
 from av.audio.format cimport AudioFormat
 from av.audio.frame cimport AudioFrame
@@ -140,6 +141,11 @@ cdef class Graph(object):
             raise ValueError('missing height')
         if format is None:
             raise ValueError('missing format')
+        if time_base is None:
+            warnings.warn('missing time_base. Guessing 1/1000 time base. '
+                          'This is deprecated and may be removed in future releases.',
+                          DeprecationWarning)
+            time_base = Fraction(1, 1000)
 
         return self.add(
             'buffer',
